@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "photo-api"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "photo_api"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.101.0"
+uvicorn = "^0.23.2"
+python-multipart = "^0.0.6"
+envparse = "^0.2.0"
+sqlalchemy = "^2.0.19"
+asyncpg = "^0.28.0"
+alembic = "^1.11.2"
+psycopg2 = "^2.9.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
