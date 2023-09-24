@@ -11,6 +11,7 @@ class StorageDAL:
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
 
+
     async def create_storage(self) -> Storage:
         new_storage = Storage()
         self.db_session.add(new_storage)
@@ -25,3 +26,7 @@ class StorageDAL:
 
     async def get_storage(self, storage_id: int) -> Storage | None:
         return await self.db_session.get(Storage, storage_id)
+
+    async def delete_storage(self, storage: Storage) -> None:
+        await self.db_session.delete(storage)
+        await self.db_session.commit()
