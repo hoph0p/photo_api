@@ -16,3 +16,7 @@ class Storage(StorageBase):
 class StorageGetter(BaseModel):
     storage: Storage
     files: list[str] = list()
+
+
+class FilePathRequest(BaseModel):
+    file_name: str

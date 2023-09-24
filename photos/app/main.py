@@ -12,7 +12,7 @@ storage_dir = media_settings.storage_root
 storage_dir.mkdir(parents=True, exist_ok=True)
 
 app.mount(
-    media_settings.media_ulr,
+    media_settings.storage_url,
     StaticFiles(directory=storage_dir),
     name="storage"
 )
