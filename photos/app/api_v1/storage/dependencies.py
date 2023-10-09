@@ -4,8 +4,8 @@ from fastapi import Path, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .dals import StorageDAL
-from ...db.db import db
-from ...db.models import Storage
+from db.models.db import db
+from db.models import Storage
 
 
 async def get_storage_by_id(

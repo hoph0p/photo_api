@@ -4,7 +4,6 @@ from pydantic_settings import BaseSettings
 
 
 class DBSetting(BaseSettings):
-    app_name: str = 'Photo API'
     db_url: str = 'postgresql+asyncpg://postgres:postgres@0.0.0.0:5432/photo_api_db'
     db_echo: bool = True
 
@@ -27,10 +26,17 @@ api_setting = ApiSetting()
 
 
 class MediaSetting(BaseSettings):
-    media_root: Path = Path('photos/app/media')
+    media_root: Path = Path('media')
     media_ulr: str = '/media'
     storage_url: str = media_ulr + '/storage'
     storage_root: Path = Path(media_root, 'storage')
 
 
 media_settings = MediaSetting()
+
+
+class S3Settings(BaseSettings):
+    endpoint_url: str = ''
+
+
+s3_settings = S3Settings()

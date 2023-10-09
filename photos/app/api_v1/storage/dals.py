@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ...db.models import Storage
+from db.models import Storage
 
 
 class StorageDAL:
@@ -10,7 +10,6 @@ class StorageDAL:
 
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
-
 
     async def create_storage(self) -> Storage:
         new_storage = Storage()

@@ -1,9 +1,8 @@
 from asyncio import current_task
 
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, async_scoped_session, AsyncSession
 
-from ..config import db_settings
+from config import db_settings
 
 
 class DatabaseHelper:

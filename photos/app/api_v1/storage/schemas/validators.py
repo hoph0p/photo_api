@@ -1,6 +1,6 @@
 from fastapi import UploadFile
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 
 ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "gif"}
 
@@ -8,7 +8,7 @@ ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "gif"}
 class FileValidator(BaseModel):
     file: UploadFile
 
-    @validator("file")
+    @field_validator("file")
     def validate_file(cls, file):
         ext = file.filename.split(".")[-1]
         if ext.lower() not in ALLOWED_EXTENSIONS:

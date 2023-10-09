@@ -1,10 +1,10 @@
-from fastapi import APIRouter, UploadFile, HTTPException, status, Depends, Request
+from fastapi import APIRouter, UploadFile, Depends, Request, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ...db.db import db
+from db.models.db import db
 from .schemas.validators import _validate_files
 from .schemas.models import StorageGetter, Storage, FilePathRequest
-from .services import put_files_in_storage, get_files_from_storage, delete_stored_files, delete_stored_file
+from .services.manager import StorageDirectoryManager
 from .dals import StorageDAL
 from .dependencies import get_storage_by_id
 
@@ -13,10 +13,13 @@ router = APIRouter(tags=['Storage'])
 
 @router.get('/', response_model=list[Storage])
 async def get_storages(session: AsyncSession = Depends(db.scoped_session_dependency)):
-    return await StorageDAL(session).get_storages()
+    result = await StorageDAL(session).get_storages()
+    if not result:
+        raise HTTPException(status_code=404, detail='No storages fow now')
+    return result
 
 
-@router.post('/')
+@router.post('/', response_model=StorageGetter)
 async def create_storage(
         request: Request,
         files: list[UploadFile],
@@ -25,7 +28,11 @@ async def create_storage(
     validated_files = await _validate_files(files)
     storage = await StorageDAL(session).create_storage()
 
-    return await put_files_in_storage(storage, validated_files, str(request.base_url))
+    result = {
+        'storage': storage,
+        'files': await StorageDirectoryManager(storage.id, str(request.base_url)).put_files(validated_files)
+    }
+    return result
 
 
 @router.get('/{storage_id}/', response_model=StorageGetter)
@@ -33,7 +40,10 @@ async def get_storage(
         request: Request,
         storage=Depends(get_storage_by_id)
 ):
-    result = {'storage': storage, 'files': await get_files_from_storage(storage, str(request.base_url))}
+    result = {
+        'storage': storage,
+        'files': await StorageDirectoryManager(storage.id, str(request.base_url)).get_files_url()
+    }
     return result
 
 
@@ -45,7 +55,10 @@ async def add_images_to_storage(
 ):
     validated_files = await _validate_files(files)
 
-    result = {'storage': storage, 'files': await put_files_in_storage(storage, validated_files, str(request.base_url))}
+    result = {
+        'storage': storage,
+        'files': await StorageDirectoryManager(storage.id, str(request.base_url)).put_files(validated_files)
+    }
     return result
 
 
@@ -58,7 +71,7 @@ async def delete_storage(
 
     await StorageDAL(session).delete_storage(storage)
 
-    await delete_stored_files(storage_id)
+    await StorageDirectoryManager(storage_id).delete_storage()
 
 
 @router.delete('/{storage_id}/delete/file')
@@ -66,4 +79,4 @@ async def delete_file_from_storage(
         request_data: FilePathRequest,
         storage=Depends(get_storage_by_id),
 ) -> None:
-    await delete_stored_file(storage.id, request_data.file_name)
+    await StorageDirectoryManager(storage.id).delete_file(request_data.file_name)
