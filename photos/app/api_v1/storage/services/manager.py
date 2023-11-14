@@ -6,12 +6,17 @@ from config import media_settings
 
 
 class StorageDirectoryManager:
-    """Class for managing storage directory in media directory"""
+    """
+    Class for managing storage directory in media directory
+    """
 
     def __init__(self, storage_id: int, base_url: str = None):
+        self.storage_id = storage_id
         self.storage_path = Path(media_settings.storage_root, str(storage_id))
         self.base_url = base_url
-        print(self.storage_path)
+
+    def __repr__(self):
+        return f"StorageDirectoryManager(storage_id={self.storage_id}, storage_path={self.storage_path}, base_url={self.base_url})"
 
     async def get_files_name(self) -> list[str]:
         return [f.name for f in self.storage_path.iterdir()]

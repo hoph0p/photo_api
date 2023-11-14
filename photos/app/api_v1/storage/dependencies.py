@@ -12,6 +12,9 @@ async def get_storage_by_id(
         storage_id: Annotated[int, Path],
         session: AsyncSession = Depends(db.scoped_session_dependency)
 ) -> Storage:
+    """
+    Getting storage by id
+    """
     storage = await StorageDAL(session).get_storage(storage_id)
 
     if not storage:

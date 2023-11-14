@@ -7,7 +7,9 @@ from db.models.base import Base
 
 
 class Storage(Base):
-    """Photo storage indexing model"""
+    """
+    Photo storage indexing model
+    """
     __tablename__ = 'storage'
 
     created_date: Mapped[datetime] = mapped_column(default=datetime.utcnow)

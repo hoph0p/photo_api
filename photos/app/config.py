@@ -27,8 +27,8 @@ api_setting = ApiSetting()
 
 class MediaSetting(BaseSettings):
     media_root: Path = Path('media')
-    media_ulr: str = '/media'
-    storage_url: str = media_ulr + '/storage'
+    media_url: str = '/media'
+    storage_url: str = media_url + '/storage'
     storage_root: Path = Path(media_root, 'storage')
 
 
